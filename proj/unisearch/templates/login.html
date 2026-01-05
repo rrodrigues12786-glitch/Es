@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="login-section">
+    <div class="login-card">
+        
+        <div id="form-login">
+            <h2>Bem-vindo de volta!</h2>
+            <form onsubmit="handleLogin(event)">
+                <label>E-mail</label>
+                <input type="email" id="login-email" required placeholder="o.teu@email.com">
+
+                <label>Password</label>
+                <input type="password" id="login-password" required placeholder="••••••••">
+
+                <button type="submit" class="btn-primary">Entrar</button>
+            </form>
+            <p class="small-text">
+                Ainda não tens conta? 
+                <a href="#" onclick="toggleForms()">Criar conta</a>
+            </p>
+        </div>
+
+        <div id="form-register" style="display: none;">
+            <h2>Criar Conta</h2>
+            <form onsubmit="handleRegister(event)">
+                <label>Nome de Utilizador</label>
+                <input type="text" id="reg-username" required placeholder="O teu nome">
+
+                <label>E-mail</label>
+                <input type="email" id="reg-email" required placeholder="o.teu@email.com">
+
+                <label>Password</label>
+                <input type="password" id="reg-password" required placeholder="••••••••">
+
+                <button type="submit" class="btn-primary">Registar</button>
+            </form>
+            <p class="small-text">
+                Já tens conta? 
+                <a href="#" onclick="toggleForms()">Fazer Login</a>
+            </p>
+        </div>
+
+        <div id="auth-message" style="margin-top: 15px; text-align: center; font-size: 0.9em;"></div>
+
+    </div>
+</section>
+
+<script>
+    function toggleForms() {
+        const loginForm = document.getElementById('form-login');
+        const regForm = document.getElementById('form-register');
+        const msgDiv = document.getElementById('auth-message');
+        
+        msgDiv.innerHTML = ''; 
+
+        if (loginForm.style.display === 'none') {
+            loginForm.style.display = 'block';
+            regForm.style.display = 'none';
+        } else {
+            loginForm.style.display = 'none';
+            regForm.style.display = 'block';
+        }
+    }
+
+    async function handleLogin(event) {
+        event.preventDefault();
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+        const msgDiv = document.getElementById('auth-message');
+
+        msgDiv.innerHTML = 'A entrar...';
+        msgDiv.style.color = '#666';
+
+        try {
+            const response = await fetch('/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                localStorage.setItem('userToken', data.token);
+                localStorage.setItem('userId', data.userId);
+                localStorage.setItem('username', data.username);
+                localStorage.setItem('userEmail', email);
+                
+                msgDiv.innerHTML = 'Login efetuado! A redirecionar...';
+                msgDiv.style.color = 'green';
+                
+                setTimeout(() => { window.location.href = '/'; }, 1000);
+            } else {
+                msgDiv.innerHTML = data.erro || data.message || 'Erro ao entrar.';
+                msgDiv.style.color = 'red';
+            }
+        } catch (error) {
+            console.error(error);
+            msgDiv.innerHTML = 'Erro de conexão com o servidor.';
+            msgDiv.style.color = 'red';
+        }
+    }
+
+    async function handleRegister(event) {
+        event.preventDefault();
+        const username = document.getElementById('reg-username').value;
+        const email = document.getElementById('reg-email').value;
+        const password = document.getElementById('reg-password').value;
+        const msgDiv = document.getElementById('auth-message');
+
+        msgDiv.innerHTML = 'A criar conta...';
+        msgDiv.style.color = '#666';
+
+        try {
+            const response = await fetch('/api/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, email, password })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                msgDiv.innerHTML = 'Conta criada com sucesso! Podes entrar.';
+                msgDiv.style.color = 'green';
+                
+                setTimeout(() => { toggleForms(); }, 1500);
+            } else {
+                msgDiv.innerHTML = data.erro || data.message || 'Erro ao registar.';
+                msgDiv.style.color = 'red';
+            }
+        } catch (error) {
+            console.error(error);
+            msgDiv.innerHTML = 'Erro de conexão com o servidor.';
+            msgDiv.style.color = 'red';
+        }
+    }
+</script>
+{% endblock %}

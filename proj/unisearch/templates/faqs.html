@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- SECÇÃO PRINCIPAL DE FAQS -->
+<section class="faqs-section">
+    <div class="faqs-container">
+
+        <h1 class="faqs-title">QUESTÕES FREQUENTES (FAQS)</h1>
+
+        <div class="faq-item">
+            <h3>1. O que é o UniSearch?</h3>
+            <p>
+                O UniSearch é uma plataforma que ajuda estudantes a encontrar cursos, universidades e
+                programas académicos de forma rápida e personalizada. Reúne informação atualizada sobre
+                instituições de ensino, requisitos de candidatura, oportunidades académicas e alojamentos
+                próximos das universidades que escolheres.
+            </p>
+        </div>
+
+        <div class="faq-item">
+            <h3>2. O UniSearch é gratuito?</h3>
+            <p>
+                Sim! A pesquisa e consulta de informação na plataforma é totalmente gratuita. Podes apenas
+                ter de te registar para acederes a mais detalhes e guardares as tuas pesquisas.
+            </p>
+        </div>
+
+        <div class="faq-item">
+            <h3>3. Que tipo de cursos posso encontrar?</h3>
+            <p>
+                Podes encontrar cursos de licenciatura, mestrado, doutoramento e pós-graduações,
+                dependendo da oferta das instituições.
+            </p>
+        </div>
+
+        <div class="faq-item">
+            <h3>4. Como funciona a pesquisa?</h3>
+            <p>
+                O motor de pesquisa do UniSearch permite filtrar resultados por curso, estado/cidade
+                e universidade.
+            </p>
+        </div>
+
+        <div class="faq-item">
+            <h3>5. As informações dos cursos são atualizadas?</h3>
+            <p>
+                Sim. Trabalhamos com dados fornecidos diretamente pelas instituições parceiras
+                ou por bases académicas atualizadas regularmente.
+            </p>
+        </div>
+
+        <div class="faq-item">
+            <h3>6. Posso candidatar-me a um curso através do UniSearch?</h3>
+            <p>
+                Por enquanto não. Esperamos no futuro disponibilizar essa opção. Neste momento,
+                serás redirecionado para o site oficial da universidade.
+            </p>
+        </div>
+
+        <div class="faq-item">
+            <h3>7. Preciso de criar uma conta para usar o UniSearch?</h3>
+            <p>
+                Não para pesquisar. Mas para guardar favoritos e pesquisas, ou receber recomendações
+                personalizadas, é necessário criar uma conta gratuita.
+            </p>
+        </div>
+
+        <div class="faq-item">
+            <h3>8. Como entro em contacto com o UniSearch?</h3>
+            <p>
+                Podes contactar a equipa através do formulário de contacto presente no site ou por
+                e-mail no endereço indicado na secção “Contactos”.
+            </p>
+        </div>
+
+        <div class="faq-item">
+            <h3>9. Os meus dados estão seguros?</h3>
+            <p>
+                Sim. Tratamos a tua privacidade com seriedade e seguimos normas de proteção de dados.
+                Os dados nunca são partilhados sem consentimento, tal como descrito na nossa Política
+                de Privacidade.
+            </p>
+        </div>
+
+    </div>
+</section>
+
+<!-- SECÇÃO FINAL: FALA CONNOSCO  -->
+<section class="contact-cta-section">
+    <div class="contact-cta-inner">
+        <h2 class="contact-cta-subtitle">Não encontraste o que procuras?</h2>
+        <h1 class="contact-cta-title">FALA CONNOSCO</h1>
+        <h3 class="contact-cta-form-title">Formulário de Contacto</h3>
+
+        <form class="contact-cta-form">
+            <input type="text" name="nome" placeholder="Nome completo">
+            <input type="email" name="email" placeholder="E-mail">
+            <input type="text" name="assunto" placeholder="Assunto">
+            <textarea name="mensagem" placeholder="Mensagem" rows="4"></textarea>
+
+            <button type="submit" class="contact-cta-button">
+                SUBMETER
+            </button>
+        </form>
+    </div>
+</section>
+
+{% endblock %}

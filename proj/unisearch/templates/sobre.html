@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- IMAGEM EM CIMA  -->
+<section class="about-hero-image">
+    <img src="{{ url_for('static', filename='img/sobre_hero.png') }}" alt="Estudantes na universidade">
+</section>
+
+<!-- BLOCO AMARELO "SOBRE NÓS"  -->
+<section class="about-main">
+    <div class="about-main-inner">
+        <h1>SOBRE NÓS</h1>
+
+        <p>
+            Na <strong>UniSearch</strong>, acreditamos que encontrar o percurso académico ideal não deve
+            ser complicado. A nossa missão é simplificar o acesso à educação, ajudando estudantes de
+            todo o mundo a descobrir cursos, universidades, alojamentos e oportunidades que melhor se
+            alinham com os seus objetivos.
+        </p>
+
+        <p>
+            Somos uma plataforma desenvolvida para tornar a pesquisa académica mais transparente,
+            rápida e personalizada. Reunimos informação atualizada de instituições nacionais e
+            internacionais, permitindo comparar opções, explorar áreas de estudo e tomar decisões
+            de forma informada.
+        </p>
+
+        <p>
+            <strong> A nossa missão</strong><br>
+            Ajudar estudantes a alcançarem o seu futuro académico e profissional, oferecendo
+            ferramentas inteligentes, informação confiável e suporte durante todo o processo de
+            descoberta e candidatura.
+        </p>
+
+        <p>
+            <strong> A nossa visão</strong><br>
+            Ser a plataforma de referência global para a pesquisa e orientação académica, conectando
+            estudantes e instituições através de tecnologia inovadora e experiências centradas no
+            utilizador.
+        </p>
+
+        <p>
+            <strong> O que nos diferencia</strong><br>
+            Pesquisa inteligente: encontra cursos, universidades e/ou alojamentos com filtros
+            detalhados.
+        </p>
+
+        <p>
+            <strong> O nosso compromisso</strong><br>
+            Trabalhamos todos os dias para garantir que cada estudante tem acesso às melhores
+            oportunidades, independentemente da sua origem ou objetivo. Queremos que a UniSearch
+            seja o teu primeiro passo rumo ao futuro.
+        </p>
+    </div>
+</section>
+
+<!-- SECÇÃO "QUEM SOMOS"  -->
+<section class="about-team">
+    <h2>QUEM SOMOS</h2>
+
+    <p class="about-team-intro">
+        A UniSearch nasceu com um propósito simples: <strong>tornar mais fácil a vida de quem procura
+        o caminho académico certo.</strong> Somos uma equipa apaixonada por educação, tecnologia e
+        inovação, dedicada a criar uma plataforma que ajude estudantes a encontrar cursos,
+        universidades e oportunidades que realmente correspondam aos seus objetivos.
+    </p>
+
+    <div class="team-grid">
+        <div class="team-card">
+            <img src="{{ url_for('static', filename='img/team1.jpg') }}" alt="Membro da equipa 1">
+        </div>
+        <div class="team-card">
+            <img src="{{ url_for('static', filename='img/team2.jpg') }}" alt="Membro da equipa 2">
+        </div>
+        <div class="team-card">
+            <img src="{{ url_for('static', filename='img/team3.jpg') }}" alt="Membro da equipa 3">
+        </div>
+        <div class="team-card">
+            <img src="{{ url_for('static', filename='img/team4.jpg') }}" alt="Membro da equipa 4">
+        </div>
+    </div>
+
+    <div class="about-banner">
+        <p>
+            <strong>Mais do que um motor de pesquisa, somos um parceiro na jornada de cada estudante</strong> —
+            desde a descoberta inicial até ao momento de avançar com confiança para o próximo passo.
+        </p>
+    </div>
+</section>
+
+{% endblock %}

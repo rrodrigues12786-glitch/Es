@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>UniSearch</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+</head>
+
+<body>
+
+<header class="navbar">
+    <div class="navbar-left">
+        <img src="{{ url_for('static', filename='img/logo_unisearch.png') }}" alt="UniSearch" class="logo">
+    </div>
+    <nav class="navbar-menu">
+        <a href="{{ url_for('index') }}">INÍCIO</a>
+        <a href="{{ url_for('universidades') }}">UNIVERSIDADES</a>
+        <a href="{{ url_for('contactos') }}">CONTACTOS</a>
+    </nav>
+    
+    <div class="navbar-right user-menu">
+        
+        <div id="nav-logged-out">
+            <a href="{{ url_for('login') }}" class="btn-login">Fazer Login</a>
+        </div>
+
+        <div id="nav-logged-in" style="display: none; align-items: center; gap: 15px;">
+            <div style="text-align: right; line-height: 1.2;">
+                <span id="nav-username" style="display:block; font-weight: bold; color: #333;">Utilizador</span>
+                <span id="nav-email" style="display:block; font-size: 0.8em; color: #666;">email@teste.com</span>
+            </div>
+            
+            <a href="/favoritos" class="btn-favorites" title="Ver Favoritos">
+                Favoritos
+            </a>
+            
+            <button onclick="fazerLogout(this)" class="btn-logout" title="Sair">
+                Logout
+            </button>
+        </div>
+
+    </div>
+</header>
+
+<main>
+    {% block content %}{% endblock %}
+</main>
+
+<footer class="footer">
+    <div class="footer-main">
+        <div class="footer-logo-block">
+            <img src="{{ url_for('static', filename='img/logo_unisearch_b.png') }}" alt="UniSearch" class="footer-logo">
+        </div>
+        <div class="footer-contact-block">
+            <div class="footer-contact-header">
+                <span>CONTACTOS</span>
+                <span>TELEFONE</span>
+                <span>E-MAIL</span>
+            </div>
+            <div class="footer-contact-body">
+                <span></span>
+                <span>+351 296 000 000</span>
+                <span>info@unisearch.pt</span>
+            </div>
+        </div>
+    </div>
+    <div class="footer-menu">
+        <div class="footer-menu-links centered">
+            <a href="/faqs">FAQS</a>
+            <a href="/termos">TERMOS E CONDIÇÕES</a>
+            <a href="/privacidade">POLÍTICA DE PRIVACIDADE</a>
+            <a href="{{ url_for('sobre_nos') }}">SOBRE NÓS</a>
+        </div>
+    </div>
+    <div class="footer-copy">
+        <p>© 2025 UniSearch. Todos os Direitos Reservados.</p>
+    </div>
+</footer>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+    // 1. GESTÃO DE UTILIZADOR 
+    document.addEventListener("DOMContentLoaded", () => {
+        const username = localStorage.getItem('username');
+        const userEmail = localStorage.getItem('userEmail'); 
+        
+        const divLoggedOut = document.getElementById('nav-logged-out');
+        const divLoggedIn = document.getElementById('nav-logged-in');
+        const spanName = document.getElementById('nav-username');
+        const spanEmail = document.getElementById('nav-email');
+
+        if (username) {
+
+            if(divLoggedOut) divLoggedOut.style.display = 'none';
+            if(divLoggedIn) divLoggedIn.style.display = 'flex';
+            
+            if(spanName) spanName.textContent = username;
+            if(spanEmail && userEmail) spanEmail.textContent = userEmail;
+        } else {
+
+            if(divLoggedOut) divLoggedOut.style.display = 'block';
+            if(divLoggedIn) divLoggedIn.style.display = 'none';
+        }
+    });
+
+
+    function fazerLogout(btn) {
+
+        if (btn.innerText === "Logout") {
+            btn.innerText = "Confirmar?";
+            btn.style.color = "#e74c3c";
+            btn.style.borderColor = "#e74c3c";
+            btn.style.fontWeight = "800";
+            
+
+            setTimeout(() => {
+                btn.innerText = "Logout";
+                btn.style.color = ""; 
+                btn.style.borderColor = "";
+                btn.style.fontWeight = "";
+            }, 3000);
+        } 
+        else {
+  
+            localStorage.clear(); 
+            window.location.href = "/"; 
+        }
+    }
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+        var mapElement = document.getElementById('map-unisearch');
+        if (!mapElement) return; 
+
+        var map = L.map('map-unisearch').setView([39.8, -98.5], 4);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+    });
+</script>
+
+</body>
+</html>

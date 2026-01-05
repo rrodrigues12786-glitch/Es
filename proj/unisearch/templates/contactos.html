@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="contact-section">
+    <div class="contact-text">
+        <h2>FALA CONNOSCO</h2>
+        <p>
+            Tens dúvidas, sugestões ou queres saber mais sobre o UniSearch?
+            Entra em contacto connosco através do formulário ou usa os contactos abaixo.
+            Estamos sempre disponíveis para ajudar-te a tirar o melhor partido da tua experiência.
+        </p>
+        <div class="contact-info">
+            <p>📞 Telefone: +351 296 000 000</p>
+            <p>✉️ Email: info@unisearch.pt</p>
+        </div>
+    </div>
+
+    <form class="contact-form">
+        <label>Nome completo</label>
+        <input type="text" name="nome" placeholder="O teu nome">
+
+        <label>E-mail</label>
+        <input type="email" name="email" placeholder="o.teu@email.com">
+
+        <label>Assunto</label>
+        <input type="text" name="assunto" placeholder="Assunto">
+
+        <label>Mensagem</label>
+        <textarea name="mensagem" rows="4" placeholder="Escreve a tua mensagem"></textarea>
+
+        <button type="submit" class="btn-submit">SUBMETER</button>
+    </form>
+</section>
+{% endblock %}

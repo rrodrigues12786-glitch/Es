@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<section class="uni-hero">
+    <div class="container" id="uni-header">
+        <h1>A carregar...</h1>
+    </div>
+</section>
+
+<section class="uni-details-section">
+    <div class="container-split">
+        
+        <div class="uni-info-box" id="uni-info">
+            </div>
+
+        <div class="uni-housing-list">
+            <h2 style="margin-bottom: 20px;">Alojamentos Próximos</h2>
+            <div id="housing-container">
+                <p>A procurar alojamentos...</p>
+            </div>
+        </div>
+        
+    </div>
+</section>
+
+
+<script>
+    let currentUniId = null;
+    let currentUniName = null;
+
+    document.addEventListener("DOMContentLoaded", async () => {
+        const uniId = "{{ id_uni }}";
+        
+        try {
+            const res = await fetch(`/api/universidade/${uniId}`);
+            const data = await res.json();
+
+            if (data.erro) {
+                document.getElementById('uni-header').innerHTML = `<h1>Erro</h1>`;
+                return;
+            }
+
+            const info = data.university_details;
+            const houses = data.nearby_accommodations;
+
+            currentUniId = info.school_id;
+            currentUniName = info.name;
+
+            document.getElementById('uni-header').innerHTML = `
+                <h1>${info.name}</h1>
+                <p>${info.city}, ${info.state}</p> 
+            `;
+
+            document.getElementById('uni-info').innerHTML = `
+                <h3>Sobre a Universidade</h3>
+                <p><strong>Custo Anual:</strong> $${info.annual_cost || 'N/A'}</p>
+                <p><strong>Localização:</strong> ${info.city}</p>
+                <p><strong>Website:</strong> <a href="${info.school_url || '#'}" target="_blank">Site oficial</a></p>
+                
+                <button id="btn-fav-action" onclick="adicionarAosFavoritos()" class="btn-fav">
+                      Adicionar aos Favoritos
+                </button>
+                <p id="fav-feedback" style="margin-top:5px; font-size:0.9em; text-align:center;"></p>
+            `;
+
+            const housingContainer = document.getElementById('housing-container');
+            housingContainer.innerHTML = '';
+
+            if (!houses || houses.length === 0) {
+                housingContainer.innerHTML = '<p>Não foram encontrados alojamentos.</p>';
+                return;
+            }
+
+            houses.forEach(house => {
+                let localizacao = house.state;
+                if (house.city) localizacao = house.city + ", " + localizacao;
+
+                housingContainer.innerHTML += `
+                    <div class="housing-card">
+                        <div>
+                            <h3>${house.street || 'Alojamento'}</h3>
+                            <p>${localizacao} (${house.postal_code})</p>
+                            <div class="distance-tag">${house.distance_km || '?'} km do campus</div>
+                        </div>
+                        <div style="text-align:right;">
+                            <div class="price-tag">$${house.price} / mês</div>
+                        </div>
+                    </div>
+                `;
+            });
+
+        } catch (error) {
+            console.error(error);
+        }
+    });
+
+    async function adicionarAosFavoritos() {
+        const userId = localStorage.getItem('userId');
+        const btn = document.getElementById('btn-fav-action');
+        const feedback = document.getElementById('fav-feedback');
+
+        if (!userId) { 
+            alert(" Precisas de fazer login primeiro."); 
+            return; 
+        }
+
+        const textoOriginal = btn.innerHTML;
+        btn.innerHTML = "A guardar...";
+        btn.disabled = true; 
+
+        try {
+            const response = await fetch(`/api/users/${userId}/favorites`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ university_id: currentUniId, university_name: currentUniName })
+            });
+
+            if (response.ok) {
+                btn.innerHTML = "Guardado na lista!";
+                btn.classList.add('success');
+                feedback.innerHTML = ""; 
+            } else {
+                const erro = await response.json();
+                btn.innerHTML = "Erro ao guardar";
+                btn.classList.add('error');
+                
+                feedback.style.color = "red";
+                feedback.innerText = erro.message || "Tenta novamente.";
+
+                setTimeout(() => {
+                    btn.innerHTML = textoOriginal;
+                    btn.disabled = false;
+                    btn.classList.remove('error');
+                    feedback.innerText = "";
+                }, 3000);
+            }
+        } catch (error) { 
+            console.error(error);
+            btn.innerHTML = "Erro de Rede";
+            setTimeout(() => {
+                btn.innerHTML = textoOriginal;
+                btn.disabled = false;
+            }, 3000);
+        }
+    }
+</script>
+{% endblock %}

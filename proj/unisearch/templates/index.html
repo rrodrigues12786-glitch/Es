@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<section class="hero" style="background-image: url('{{ url_for('static', filename='img/hero_classroom.png') }}');">
+    <div class="hero-overlay"></div>
+    <div class="hero-content hero-box">
+        <p class="hero-small">Encontra a</p>
+        <h1 class="hero-title">
+            <span class="highlight">universidade</span> e o<br>
+            <span class="highlight">curso</span> ideal para ti
+        </h1>
+        <p class="hero-subtitle">Explora cursos, universidades e alojamentos.</p>
+        <a href="#search-section" class="btn-primary">PESQUISAR</a>
+    </div>
+</section>
+
+<section id="search-section" class="search-section">
+    <h2>O TEU FUTURO COMEÇA AQUI</h2>
+    
+    <div class="search-form">
+        <a href="{{ url_for('universidades') }}" class="btn-search" style="text-decoration: none; display: inline-block;">
+            IR PARA PESQUISA AVANÇADA
+        </a>
+    </div>
+</section>
+
+<section class="cities-section">
+    <div class="city-card">
+        <img src="{{ url_for('static', filename='img/harvard.jpg') }}" alt="Harvard">
+        <div class="city-label">HARVARD</div>
+    </div>
+    <div class="city-card">
+        <img src="{{ url_for('static', filename='img/yale.jpg') }}" alt="Yale">
+        <div class="city-label">YALE</div>
+    </div>
+    <div class="city-card">
+        <img src="{{ url_for('static', filename='img/columbia.jpg') }}" alt="Columbia">
+        <div class="city-label">COLUMBIA</div>
+    </div>
+</section>
+
+{% endblock %}

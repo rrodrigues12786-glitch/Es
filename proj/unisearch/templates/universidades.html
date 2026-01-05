@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<section class="search-section">
+    <h2>PESQUISA DE UNIVERSIDADES</h2>
+    <form class="search-form">
+        <div class="select-group">
+            <select name="cidade">
+                <option value="" selected>Todos os Estados (EUA)</option>
+                <option value="NY">New York</option>
+                <option value="CA">California</option>
+                <option value="MA">Massachusetts</option>
+                <option value="TX">Texas</option>
+                <option value="FL">Florida</option>
+                <option value="IL">Illinois</option>
+                <option value="PA">Pennsylvania</option>
+            </select>
+
+            <select name="curso">
+                <option value="" selected>Todos os cursos</option>
+                <option value="Technology">Tecnologia</option>
+                <option value="Arts">Artes</option>
+                <option value="Health">Saúde</option>
+                <option value="Business">Negócios</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn-search">PESQUISAR</button>
+    </form>
+</section>
+
+<section class="map-section">
+    <div id="map-unisearch"></div>
+</section>
+
+<section class="results-section">
+    <div class="results-wrapper">
+
+        <aside class="results-sidebar" style="min-height: 400px; background-color: #f5f5f5; border-radius: 4px;">
+        </aside>
+
+        <div class="results-main">
+            <h2>RESULTADOS</h2>
+
+            <div id="container-universidades">
+                <p style="padding: 20px;">A carregar...</p>
+            </div>
+
+            <div class="pagination-container" style="margin-top: 30px; display: flex; gap: 5px; justify-content: center;">
+                </div>
+
+        </div> 
+    </div> 
+</section>
+
+<button id="btn-back-to-top" title="Voltar ao topo">⬆</button>
+
+<script>
+    let paginaAtual = 1;
+    let filtrosAtuais = {};
+    let map = null;
+    let markersGroup = null;
+
+    function initMap() {
+        if (!document.getElementById('map-unisearch')) return;
+        
+        map = L.map('map-unisearch').setView([39.8, -98.5], 4);
+        
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        markersGroup = L.layerGroup().addTo(map);
+    }
+
+    async function buscarUniversidades(filtros = {}, pagina = 1) {
+        const container = document.getElementById('container-universidades');
+        
+        container.innerHTML = '<p>A carregar...</p>';
+        filtrosAtuais = filtros;
+        paginaAtual = pagina;
+
+        try {
+            let url = `/api/universidades?page=${pagina}`;
+            const params = new URLSearchParams();
+
+            if (filtros.cidade) params.append('cidade', filtros.cidade);
+            if (filtros.curso) params.append('curso', filtros.curso);
+            
+            if (params.toString()) url += '&' + params.toString();
+
+            const resposta = await fetch(url);
+            const dados = await resposta.json(); 
+
+            container.innerHTML = ''; 
+            
+            if (markersGroup) markersGroup.clearLayers();
+
+            if (dados.length === 0) {
+                container.innerHTML = '<p>Sem resultados.</p>';
+                return;
+            }
+
+            dados.forEach(uni => {
+                const lat = 39.8 + (Math.random() - 0.5) * 10; 
+                const lon = -98.5 + (Math.random() - 0.5) * 20;
+                
+                if (markersGroup) {
+                    const marker = L.marker([lat, lon]);
+                    marker.bindPopup(`<b>${uni.nome}</b><br>${uni.cidade}`);
+                    markersGroup.addLayer(marker);
+                }
+
+                container.innerHTML += `
+                <article class="result-card">
+                    <div class="result-main-row" style="display:flex; justify-content:space-between; width:100%;">
+                        <div>
+                            <h3>${uni.nome}</h3>
+                            <p class="result-location" style="margin-bottom:5px;">
+                                <strong>Localização:</strong> ${uni.cidade}
+                            </p>
+                            
+                            <p class="result-cost" style="color: #2c3e50;">
+                                <strong>Custo Anual:</strong> ${uni.presenca.replace('Custo: ', '')}
+                            </p>
+                            
+                            <div style="margin-top: 15px;">
+                                <a href="/universidade/${uni.id}" class="result-link" style="font-size:14px; font-weight:bold;">
+                                    Ver detalhes &rarr;
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                `;
+            });
+
+            renderizarPaginacao();
+
+        } catch (erro) {
+            console.error(erro);
+            container.innerHTML = '<p style="color:red">Erro ao carregar dados.</p>';
+        }
+    }
+
+    function renderizarPaginacao() {
+        const container = document.querySelector('.pagination-container');
+        container.innerHTML = '';
+
+        for (let i = 1; i <= 5; i++) {
+            const btn = document.createElement('button');
+            btn.innerText = i;
+            btn.style.padding = "8px 12px";
+            btn.style.cursor = "pointer";
+            btn.style.border = "1px solid #ccc";
+            btn.style.backgroundColor = (i === paginaAtual) ? "#F4C542" : "#fff";
+            
+            btn.onclick = () => {
+                buscarUniversidades(filtrosAtuais, i);
+                window.scrollTo({ top: 0, behavior: 'smooth' }); 
+            };
+            container.appendChild(btn);
+        }
+    }
+
+    window.onscroll = function() {
+        const btnTop = document.getElementById("btn-back-to-top");
+        if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+            btnTop.style.display = "block";
+        } else {
+            btnTop.style.display = "none";
+        }
+    };
+
+    document.getElementById("btn-back-to-top").addEventListener("click", function() {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+        initMap(); 
+        buscarUniversidades(); 
+
+        const searchForm = document.querySelector('.search-form');
+        if (searchForm) {
+            searchForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const cidade = searchForm.querySelector('select[name="cidade"]').value;
+                const curso = searchForm.querySelector('select[name="curso"]').value;
+                buscarUniversidades({ cidade, curso }, 1);
+            });
+        }
+    });
+</script>
+{% endblock %}
