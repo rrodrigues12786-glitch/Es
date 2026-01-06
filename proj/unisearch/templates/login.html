@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+
 <section class="login-section">
     <div class="login-card">
         
@@ -11,9 +12,14 @@
                 <input type="email" id="login-email" required placeholder="o.teu@email.com">
 
                 <label>Password</label>
-                <input type="password" id="login-password" required placeholder="••••••••">
+                <div class="password-container">
+                    <input type="password" id="login-password" required placeholder="••••••••">
+                    <button type="button" class="toggle-password" onclick="togglePassword('login-password', this)">
+                        Ver
+                    </button>
+                </div>
 
-                <button type="submit" class="btn-primary">Entrar</button>
+                <button type="submit" class="btn-primary" style="margin-top: 15px;">Entrar</button>
             </form>
             <p class="small-text">
                 Ainda não tens conta? 
@@ -31,9 +37,14 @@
                 <input type="email" id="reg-email" required placeholder="o.teu@email.com">
 
                 <label>Password</label>
-                <input type="password" id="reg-password" required placeholder="••••••••">
+                <div class="password-container">
+                    <input type="password" id="reg-password" required placeholder="••••••••">
+                    <button type="button" class="toggle-password" onclick="togglePassword('reg-password', this)">
+                        Ver
+                    </button>
+                </div>
 
-                <button type="submit" class="btn-primary">Registar</button>
+                <button type="submit" class="btn-primary" style="margin-top: 15px;">Registar</button>
             </form>
             <p class="small-text">
                 Já tens conta? 
@@ -47,6 +58,21 @@
 </section>
 
 <script>
+    // Função para mostrar/esconder password
+    function togglePassword(inputId, btn) {
+        const input = document.getElementById(inputId);
+        
+        if (input.type === "password") {
+            input.type = "text";
+            btn.innerText = "Ocultar";
+            btn.title = "Esconder Password";
+        } else {
+            input.type = "password";
+            btn.innerText = "Ver";
+            btn.title = "Ver Password";
+        }
+    }
+
     function toggleForms() {
         const loginForm = document.getElementById('form-login');
         const regForm = document.getElementById('form-register');
