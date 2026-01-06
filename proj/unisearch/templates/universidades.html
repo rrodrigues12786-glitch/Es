@@ -111,6 +111,14 @@
                     const marker = L.marker([lat, lon]);
                     marker.bindPopup(`<b>${uni.nome}</b><br>${uni.cidade}`);
                     markersGroup.addLayer(marker);
+
+                    const circle = L.circle([lat, lon], {
+                        color: '#F4C542',     
+                        fillColor: '#F4C542',   
+                        fillOpacity: 0.15,      
+                        radius: 50000          
+                    });
+                    markersGroup.addLayer(circle);
                 }
 
                 container.innerHTML += `
